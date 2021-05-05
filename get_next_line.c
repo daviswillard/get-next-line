@@ -1,5 +1,4 @@
 #include "get_next_line.h"
-#include "../libft/libft.h"
 #include <stdio.h>
 #include <fcntl.h>
 
@@ -24,7 +23,6 @@ int get_next_line(int fd, char **line)
 		if ((tails = ft_strchr(buf, 10)))
 		{
 			*tails++ = 0;
-//			free(*line);
 			*line = ft_strjoin(*line, buf);
 			return (1);
 		}
@@ -48,9 +46,9 @@ int main(void)
 		k++;
 		if (cond < 0)
 			return (-1);
-//		if (k == 25)
+		if (k == 25)
 			printf("k = %d: %s\n", k, line);
-		free(line);
+	//	free(line);
 	}
 	return (0);
 }
