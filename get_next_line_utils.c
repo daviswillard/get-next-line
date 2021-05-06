@@ -1,5 +1,15 @@
 #include "get_next_line.h"
 
+int ft_strlen(char const *s)
+{
+	int counter;
+
+	counter = 0;
+	while (*s)
+		counter++;
+	return (counter);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		cntr1;
