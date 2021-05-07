@@ -1,30 +1,54 @@
 #include "get_next_line.h"
 #include <stdio.h>
 #include <fcntl.h>
+#include <string.h>
 
-#define BUFFER_SIZE 20
+#define BUFFER_SIZE 200
 
-/*static void	make_it_static(char *tails, char **cache, char *buf, char
-**line)
+/*char	*check_cache(char *cache, char **line)
 {
+	char	*ptr;
 
-}*/
+	ptr = NULL;
+	if (cache)
+	{
+		ptr = ft_strchr(cache, '\n');
+		if (ptr)
+		{
+			*ptr++ = '\0';
+			*line = ft_strdup(cache);
+			cache = ft_strcpy(cache, ptr);
+		}
+		else
+		{
+			*line = ft_strdup(cache);
+			cache = NULL;
+			free(cache);
+		}
+	}
+	else
+		*line = "";
+	return (ptr);
+}
+*/
 int	get_next_line(int fd, char **line)
 {
 	char			buf[BUFFER_SIZE + 1];
 	char			*tails;
 	static char		*cache;
-	size_t			read_bytes;
+	int 			read_bytes;
 
+	if (fd < 0 || !*line || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
+		return (-1);
+//	tails = check_cache(cache, line);
 	if (cache)
 	{
 		*line = ft_strdup(cache);
+		cache = NULL;
 		free(cache);
 	}
 	else
 		*line = "";
-	if (fd < 0 || !*line || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
-		return (-1);
 	read_bytes = read(fd, buf, BUFFER_SIZE);
 	while (read_bytes)
 	{

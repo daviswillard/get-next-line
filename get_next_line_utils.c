@@ -10,6 +10,16 @@ int	ft_strlen(char const *s)
 	return (counter);
 }
 
+char	*ft_strcpy(char *dst, const char *src)
+{
+	char	*dest;
+
+	dest = dst;
+	while (*src)
+		*dest++ = *src++;
+	return (dst);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		cntr1;
@@ -64,24 +74,4 @@ char	*ft_strdup(const char *s1)
 		*ptr++ = *s1++;
 	*ptr = '\0';
 	return (ret);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char				*substr;
-	int					index;
-	unsigned int		length;
-
-	length = ft_strlen(s);
-	index = 0;
-	substr = malloc(sizeof(*substr) * (len) + 1);
-	if (substr == NULL)
-		return (NULL);
-	while (s[start] && len > 0 && start < length)
-	{
-		substr[index++] = s[start++];
-		len--;
-	}
-	substr[index] = 0;
-	return (substr);
 }
