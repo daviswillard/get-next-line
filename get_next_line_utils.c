@@ -5,7 +5,7 @@ int ft_strlen(char const *s)
 	int counter;
 
 	counter = 0;
-	while (*s)
+	while (*s++)
 		counter++;
 	return (counter);
 }
@@ -54,16 +54,17 @@ char	*ft_strchr(const char *s, int c)
 char	*ft_strdup(const char *s1)
 {
 	char	*ret;
-	int		ind;
+	char 	*ptr;
 
-	ind = 0;
-	ret = malloc(sizeof(*ret) * ft_strlen(s1) + 1);
+	ret = malloc(sizeof(char *) * ft_strlen(s1) + 1);
 	if (ret == NULL)
 		return (NULL);
+	ptr = ret;
 	while (*s1)
-		ret[ind++] = *s1++;
-	ret[ind] = 0;
+		*ptr++ = *s1++;
+	*ptr = '\0';
 	return (ret);
+
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)

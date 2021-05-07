@@ -1,8 +1,16 @@
 #include "get_next_line.h"
 #include <stdio.h>
 #include <fcntl.h>
+#include <string.h>
 
 #define BUFFER_SIZE 8
+
+/*static void	make_it_static(char *tails, char **cache, char *buf, char
+**line)
+{
+
+}*/
+
 
 int get_next_line(int fd, char **line)
 {
@@ -11,16 +19,15 @@ int get_next_line(int fd, char **line)
 	static char 	*cache;
 	size_t			read_bytes;
 
-
-	if (!cache)
+	if (cache)
 	{
 		*line = ft_strdup(cache);
 		free(cache);
 	}
 	else
 		*line = "";
-/*	if (fd < 0 || !*line || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
-		return (-1);*/
+	if (fd < 0 || !*line || read(fd, NULL, 0) < 0)
+		return (-1);
 	while ((read_bytes = read(fd, buf, BUFFER_SIZE)))
 	{
 		if (read_bytes < 0)
@@ -56,5 +63,6 @@ int main(void)
 		printf("k = %d: %s\n", k, line);
 		free(line);
 	}
+	close(fd);
 	return (0);
 }
