@@ -3,32 +3,44 @@
 #include <fcntl.h>
 #include <string.h>
 
-#define BUFFER_SIZE 200
+#define BUFFER_SIZE 100
 
-/*char	*check_cache(char *cache, char **line)
+static int	check_cache(char **cache, char **line)
 {
-	char	*ptr;
+	char *tails;
 
-	ptr = NULL;
-	if (cache)
+	*line = "";
+	tails = NULL;
+	if (*cache)
 	{
-		ptr = ft_strchr(cache, '\n');
-		if (ptr)
+		tails = ft_strchr(*cache, '\n');
+		if (tails != NULL)
 		{
-			*ptr++ = '\0';
-			*line = ft_strdup(cache);
-			cache = ft_strcpy(cache, ptr);
-		}
-		else
-		{
-			*line = ft_strdup(cache);
-			cache = NULL;
-			free(cache);
+			*tails++ = '\0';
+//			printf("tails = %s\n\n", tails);
+			*line = ft_strdup(*cache);
+//			printf("line = %s\n\n", *line);
+			free(*cache);
+			*cache = ft_strdup(tails);
+//			printf("cache = %s\n\n", *cache);
+			return (1);
 		}
 	}
+	return (0);
+}
+
+/*static int returner(char **tails, char **cache, char **line, char **buf)
+{
+	if (ft_strchr(*buf, '\n'))
+	{
+		*tails = ft_strchr(*buf, '\n');
+		**tails++ = 0;
+		*cache = ft_strdup(*tails);
+		*line = ft_strjoin(*line, *buf);
+		return (1);
+	}
 	else
-		*line = "";
-	return (ptr);
+		return (0);
 }
 */
 int	get_next_line(int fd, char **line)
@@ -40,18 +52,12 @@ int	get_next_line(int fd, char **line)
 
 	if (fd < 0 || !*line || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
 		return (-1);
-//	tails = check_cache(cache, line);
-	if (cache)
-	{
-		*line = ft_strdup(cache);
-		cache = NULL;
-		free(cache);
-	}
-	else
-		*line = "";
-	read_bytes = read(fd, buf, BUFFER_SIZE);
+	if (check_cache(&cache, line))
+		return (1);
+	read_bytes = 1;
 	while (read_bytes)
 	{
+		read_bytes = read(fd, buf, BUFFER_SIZE);
 		if (read_bytes < 0)
 			return (-1);
 		buf[BUFFER_SIZE] = 0;
@@ -64,7 +70,6 @@ int	get_next_line(int fd, char **line)
 			return (1);
 		}
 		*line = ft_strjoin(*line, buf);
-		read_bytes = read(fd, buf, BUFFER_SIZE);
 	}
 	return (0);
 }
@@ -86,9 +91,22 @@ int	main(void)
 		if (cond < 0)
 			return (-1);
 		printf("k = %d: %s\n", k, line);
+//		printf("k = %d: %s\n********************************\n", k, line);
 		free(line);
 		cond = get_next_line(fd, &line);
+		if (k > 30)
+			return (0);
 	}
 	close(fd);
 	return (0);
 }
+
+/*	42-43
+ 	if (cache)
+	{
+		*line = ft_strdup(cache);
+		cache = NULL;
+		free(cache);
+	}
+	else
+		*line = "";*/
