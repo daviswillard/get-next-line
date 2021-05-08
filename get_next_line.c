@@ -11,19 +11,25 @@ static int	check_cache(char **cache, char **line)
 
 	*line = "";
 	tails = NULL;
+//	printf("cache = %s\n\n", *cache);
 	if (*cache)
 	{
 		tails = ft_strchr(*cache, '\n');
 		if (tails != NULL)
 		{
 			*tails++ = '\0';
-//			printf("tails = %s\n\n", tails);
+			printf("tails = %s\n\n", tails);
 			*line = ft_strdup(*cache);
-//			printf("line = %s\n\n", *line);
+			printf("line = %s\n\n", *line);
 			free(*cache);
 			*cache = ft_strdup(tails);
-//			printf("cache = %s\n\n", *cache);
+			printf("cache = %s\n\n", *cache);
 			return (1);
+		}
+		else
+		{
+			*line = ft_strdup(*cache);
+			free(*cache);
 		}
 	}
 	return (0);
@@ -45,15 +51,20 @@ static int	check_cache(char **cache, char **line)
 */
 int	get_next_line(int fd, char **line)
 {
-	char			buf[BUFFER_SIZE + 1];
-	char			*tails;
-	static char		*cache;
-	int 			read_bytes;
+	char 		buf[BUFFER_SIZE + 1];
+	char 		*tails;
+	static char *cache;
+	int 		read_bytes;
+	int 		k;
 
 	if (fd < 0 || !*line || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
 		return (-1);
-	if (check_cache(&cache, line))
+	if ((k = check_cache(&cache, line)))
+	{
+		printf("%d\n", k);
 		return (1);
+	}
+	printf("%d\n", k);
 	read_bytes = 1;
 	while (read_bytes)
 	{
@@ -90,8 +101,8 @@ int	main(void)
 		k++;
 		if (cond < 0)
 			return (-1);
-		printf("k = %d: %s\n", k, line);
-//		printf("k = %d: %s\n********************************\n", k, line);
+//		printf("k = %d: %s\n", k, line);
+		printf("k = %d: %s\n********************************\n", k, line);
 		free(line);
 		cond = get_next_line(fd, &line);
 		if (k > 30)
