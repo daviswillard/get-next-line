@@ -5,8 +5,9 @@ int	ft_strlen(char const *s)
 	int	counter;
 
 	counter = 0;
-	while (*s++)
-		counter++;
+	if (s)
+		while (*s++)
+			counter++;
 	return (counter);
 }
 
@@ -67,7 +68,7 @@ char	*ft_strdup(const char *s1)
 	char	*ptr;
 
 	ret = malloc(sizeof(char *) * ft_strlen(s1) + 1);
-	if (ret == NULL)
+	if (ret == NULL || !s1)
 		return (NULL);
 	ptr = ret;
 	while (*s1)

@@ -16,6 +16,4 @@ int		ft_strlen(char const *s);
 
 char	*ft_strcpy(char *dst, const char *src);
 
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-
 #endif
