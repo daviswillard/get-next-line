@@ -11,15 +11,7 @@ int	ft_strlen(char const *s)
 	return (counter);
 }
 
-char	*ft_strcpy(char *dst, const char *src)
-{
-	char	*dest;
 
-	dest = dst;
-	while (*src)
-		*dest++ = *src++;
-	return (dst);
-}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
