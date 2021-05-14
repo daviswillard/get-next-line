@@ -68,3 +68,14 @@ char	*ft_strdup(const char *s1)
 	*ptr = '\0';
 	return (ret);
 }
+
+char 	*ft_strcpy(char *dst, const char *src)
+{
+	char	*ret;
+
+	ret = dst;
+	while (*src)
+		*dst++ = *src++;
+	*dst = *src;
+	return (ret);
+}

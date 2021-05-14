@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-#define BUFFER_SIZE 8
+#define BUFFER_SIZE 400
 
 static int 	tail_check(char **tail, char **line)
 {
@@ -12,6 +12,7 @@ static int 	tail_check(char **tail, char **line)
 
 	if (*tail)
 	{
+		free(*line);
 		tempest = ft_strchr(*tail, '\n');
 		if (tempest)
 		{
@@ -22,15 +23,29 @@ static int 	tail_check(char **tail, char **line)
 			free(temp);
 			return (1);
 		}
-		else
-			*line = ft_strdup(*tail);
+		*line = ft_strdup(*tail);
+	}
+	else
+	{
+		*line = ft_strdup("");
+		printf("%p\n", *line);
 	}
 	return (0);
+}
+
+static void		ft_liberty(char **line, char *buf)
+{
+	char *temp;
+
+	temp = *line;
+	*line = ft_strjoin(*line, buf);
+	free(temp);
 }
 
 int	get_next_line(int fd, char **line)
 {
 	static char		*tail;
+	static int 		count;
 	char 			*tmp;
 	char			buf[BUFFER_SIZE + 1];
 	size_t			bytes_read;
@@ -49,22 +64,18 @@ int	get_next_line(int fd, char **line)
 		if (tail)
 		{
 			tmp = tail;
-			*tail++ = '\0';
-			tail = ft_strdup(tail);
+			tail = ft_strdup(tail + 1);
 			free(tmp);
 			*ft_strchr(buf, '\n') = '\0';
-			tmp = *line;
-			*line = ft_strjoin(*line, buf);
-			free(tmp);
+			ft_liberty(line, buf);
 			return (1);
 		}
-		tmp = *line;
-		*line = ft_strjoin(*line, buf);
-		free(tmp);
+		ft_liberty(line, buf);
 		bytes_read = read(fd, buf, BUFFER_SIZE);
 	}
 	if (bytes_read < 0)
 		return (-1);
+	ft_liberty(line, buf);
 	return (0);
 }
 
@@ -75,19 +86,22 @@ int	main(void)
 	int		k;
 	char	*line;
 
-	fd = open("../text.txt", O_RDONLY);
-	k = 0;
-	line = ft_strdup("");
+	fd = open("text.txt", O_RDONLY);
+	k = 1;
+	line = "";
 	cond = get_next_line(fd, &line);
 	while (cond)
 	{
 		if(cond < 0)
 			return (-1);
-		printf("%s\n",line);
+		printf("%d\n%s\n", k, line);
 		free(line);
+		line = NULL;
 		k++;
 		cond = get_next_line(fd, &line);
 	}
+	while (1)
+		NULL;
 	close(fd);
 	return (0);
 }
